@@ -6,7 +6,7 @@ class User:
     """
     A class representing a user in the system.
     """
-    
+
     users = {}
 
     def __init__(self, username: str, password: str, phone_number: str = None) -> None:
@@ -96,61 +96,60 @@ class User:
         """
         Registers a new user by taking the username, password, and phone number as input from the user.
         """
-        username = input("نام کاربری را وارد کنید: ")
-        if username in User.users:
-            raise ValueError("نام کاربری تکراری است.")
-        
-        password = getpass("گذرواژه را وارد کنید: ")
-        if not cls.validate_password(password):
-            print("گذرواژه نامعتبر است.")
-            return
-        phone_number = input("شماره تلفن را وارد کنید: ")
-        try:
-            user = cls(username, password, phone_number)
-            print("ثبت نام با موفقیت انجام شد.")
-        except ValueError as e:
-            print(str(e))
-
+        while True:
+            try:
+                username = input("نام کاربری را وارد کنید: ")
+                password = getpass("گذرواژه را وارد کنید: ")
+                phone_number = input("شماره تلفن را وارد کنید: ")
+                user = cls(username, password, phone_number)
+                print("ثبت نام با موفقیت انجام شد.")
+                break
+            except ValueError as e:
+                print(str(e))
+                continue
+    
     @classmethod
     def login(cls) -> None:
         """
         Logs in an existing user by taking the username and password as input from the user.
         """
-        username = input("نام کاربری را وارد کنید: ")
-        password = getpass("گذرواژه را وارد کنید: ")
-        user = cls.users.get(username)
-        if not user:
-            print("کاربری با این نام کاربری وجود ندارد.")
-            return
-        if user.password != user.encrypt_password(password):
-            print("گذرواژه نادرست است.")
-            return
-        print("ورود موفقیت‌آمیز.")
         while True:
-            print("لطفاً یکی از گزینه‌های زیر را انتخاب کنید:")
-            print("1. نمایش اطلاعات کاربری")
-            print("2. ویرایش اطلاعات کاربری")
-            print("3. تغییر گذرواژه")
-            print("4. خروج")
-            choice = input()
-            if choice == "1":
-                print(user)
-            elif choice == "2":
-                new_username = input("نام کاربری جدید را وارد کنید: ")
-                if new_username != username and new_username in cls.users:
-                    print("نام کاربری تکراری است.")
-                    continue
-                new_phone_number = input("شماره تلفن جدید را وارد کنید: ")
-                user.username = new_username
-                user.phone_number = new_phone_number
-                cls.users[new_username] = user
-                del cls.users[username]
-                username = new_username
-                print("اطلاعات با موفقیت به‌روزرسانی شدند.")
-            elif choice == "3":
-                user.change_password()
-            elif choice == "4":
-                print("خروج از حساب کاربری.")
-                break
-            else:
-                print("گزینه نامعتبر است.")
+            username = input("نام کاربری را وارد کنید: ")
+            password = getpass("گذرواژه را وارد کنید: ")
+            user = cls.users.get(username)
+            if not user:
+                print("کاربری با این نام کاربری وجود ندارد.")
+                continue
+            if user.password != user.encrypt_password(password):
+                print("گذرواژه نادرست است.")
+                continue
+            print("ورود موفقیت‌آمیز.")
+            while True:
+                print("لطفاً یکی از گزینه‌های زیر را انتخاب کنید:")
+                print("1. نمایش اطلاعات کاربری")
+                print("2. ویرایش اطلاعات کاربری")
+                print("3. تغییر گذرواژه")
+                print("4. خروج")
+                choice = input()
+                if choice == "1":
+                    print(user)
+                elif choice == "2":
+                    new_username = input("نام کاربری جدید را وارد کنید: ")
+                    if new_username != username and new_username in cls.users:
+                        print("نام کاربری تکراری است.")
+                        continue
+                    new_phone_number = input("شماره تلفن جدید را وارد کنید: ")
+                    user.username = new_username
+                    user.phone_number = new_phone_number
+                    cls.users[new_username] = user
+                    del cls.users[username]
+                    username = new_username
+                    print("اطلاعات با موفقیت به‌روزرسانی شدند.")
+                elif choice == "3":
+                    user.change_password()
+                elif choice == "4":
+                    print("خروج از حساب کاربری.")
+                    break
+                else:
+                    print("گزینه نامعتبر است.")
+
